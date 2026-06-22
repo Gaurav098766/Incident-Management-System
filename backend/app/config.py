@@ -6,6 +6,9 @@ class Settings(BaseSettings):
     app_name: str = "Incident Management API"
     debug: bool = True
 
+    # SQLite Database
+    database_url: str = "sqlite:///./incidents.db"
+
     # CORS - allow Next.js server
     cors_allowed_origins: list[str] = ["http://localhost:3000"]
 
