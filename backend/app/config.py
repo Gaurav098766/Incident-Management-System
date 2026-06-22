@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     debug: bool = True
 
     # SQLite Database
-    database_url: str = "sqlite:///./incidents.db"
+    database_url: str = "sqlite:///./backend/incidents.db"
 
     # CORS - allow Next.js server
     cors_allowed_origins: list[str] = ["http://localhost:3000"]
