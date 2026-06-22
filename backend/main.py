@@ -27,3 +27,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(incidents_router, prefix="/api")
