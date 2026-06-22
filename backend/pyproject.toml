@@ -1,0 +1,10 @@
+[project]
+name = "Incident-Management-Backend"
+version = "0.1.0"
+description = "Backend for the Incident Management System"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+]
