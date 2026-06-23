@@ -60,8 +60,8 @@ def list_incidents(
     page_rows = all_rows[offset: offset + page_size]
 
     return {
-        "page_rows": [IncidentListItem.model_validate(incident) for incident in page_rows],
-        "total": total,
+        "results": [IncidentListItem.model_validate(incident) for incident in page_rows],
+        "count": total,
         "page": page,
         "page_size": page_size
     }
