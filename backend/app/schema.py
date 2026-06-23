@@ -43,3 +43,17 @@ class IncidentListItem(BaseModel):
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class IncidentDetail(BaseModel):
+    id: int
+    title: str
+    description: str
+    severity: Severity
+    status: Status
+    category: Optional[Category]
+    reporter_name: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}

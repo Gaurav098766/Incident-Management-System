@@ -4,14 +4,14 @@ from ..database import get_session
 from typing import Optional
 from ..models import Incident, Severity, Category, Status
 from datetime import datetime, timezone
-from ..schema import IncidentCreate, IncidentListItem 
+from ..schema import IncidentCreate, IncidentListItem, IncidentDetail
 
 router = APIRouter(prefix="/incidents", tags=["incidents"])
 
 
 # ── 1. Create ─────────────────────────────────────────────────────────────────
 
-@router.post("/",status_code=201, summary="Create a new incident")
+@router.post("/",status_code=201, summary="Create a new incident", response_model=IncidentDetail)
 def create_incident(
     payload: IncidentCreate,
     session: Session = Depends(get_session),
@@ -21,7 +21,7 @@ def create_incident(
     session.add(incident)
     session.commit()
     session.refresh(incident)
-    return incident
+    return IncidentDetail.model_validate(incident)
 
 
 # ── 2. List + filter ──────────────────────────────────────────────────────────
@@ -65,18 +65,18 @@ def list_incidents(
 
 # ── 3. Detail ─────────────────────────────────────────────────────────────────
 
-@router.get("/{incident_id}/", summary="Get particular incident detail")
+@router.get("/{incident_id}/", summary="Get particular incident detail", response_model=IncidentDetail)
 def get_incident(incident_id: int, session: Session = Depends(get_session)):
     """Retrieve full incident detail. 404 if not found."""
     incident = session.get(Incident, incident_id)
     if not incident:
         raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found.")
-    return incident
+    return IncidentDetail.model_validate(incident)
 
 
 # ── 4. Status update ──────────────────────────────────────────────────────────
 
-@router.patch("/{incident_id}/status/", summary="Update incident status")
+@router.patch("/{incident_id}/status/", summary="Update incident status", response_model=IncidentDetail)
 def update_status(
     incident_id: int,
     status: Status = Body(..., embed=True),
@@ -92,4 +92,4 @@ def update_status(
     session.add(incident)
     session.commit()
     session.refresh(incident)
-    return incident
+    return IncidentDetail.model_validate(incident)
