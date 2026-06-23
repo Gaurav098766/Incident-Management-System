@@ -4,7 +4,7 @@ from ..database import get_session
 from typing import Optional
 from ..models import Incident, Severity, Category, Status
 from datetime import datetime, timezone
-from ..schema import IncidentCreate
+from ..schema import IncidentCreate, IncidentListItem 
 
 router = APIRouter(prefix="/incidents", tags=["incidents"])
 
@@ -56,7 +56,7 @@ def list_incidents(
     page_rows = all_rows[offset: offset + page_size]
 
     return {
-        "page_rows": page_rows,
+        "page_rows": [IncidentListItem.model_validate(incident) for incident in page_rows],
         "total": total,
         "page": page,
         "page_size": page_size

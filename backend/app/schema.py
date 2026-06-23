@@ -1,6 +1,8 @@
 from typing import Optional
 from pydantic import BaseModel, field_validator
 from .models import Severity, Category
+from .models import Severity, Status, Category
+from datetime import datetime
 
 
 # ---------- Request schemas ----------
@@ -25,3 +27,19 @@ class IncidentCreate(BaseModel):
         if not v.strip():
             raise ValueError("Description cannot be blank.")
         return v.strip()
+
+
+
+# ---------- Response schemas ----------
+
+class IncidentListItem(BaseModel):
+    id: int
+    title: str
+    severity: Severity
+    status: Status
+    category: Optional[Category]
+    reporter_name: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
