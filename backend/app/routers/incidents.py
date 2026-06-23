@@ -6,6 +6,8 @@ from ..models import Incident, Severity, Category, Status
 
 router = APIRouter(prefix="/incidents", tags=["incidents"])
 
+
+# ── 1. Create ─────────────────────────────────────────────────────────────────
 @router.post("/",status_code=201, summary="Create a new incident")
 def create_incident(
     title: str = Body(...),
@@ -45,6 +47,7 @@ def create_incident(
     return incident
 
 
+# ── 2. List + filter ──────────────────────────────────────────────────────────
 @router.get("/", summary="List incidents")
 def list_incidents(
     severity: Optional[Severity] = Query(default=None),
@@ -80,3 +83,13 @@ def list_incidents(
         "page": page,
         "page_size": page_size
     }
+
+
+# ── 3. Detail ─────────────────────────────────────────────────────────────────
+@router.get("/{incident_id}/", summary="Get particular incident detail")
+def get_incident(incident_id: int, session: Session = Depends(get_session)):
+    """Retrieve full incident detail. 404 if not found."""
+    incident = session.get(Incident, incident_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found.")
+    return incident
