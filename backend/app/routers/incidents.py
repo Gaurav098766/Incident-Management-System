@@ -3,11 +3,13 @@ from sqlmodel import Session, select, col
 from ..database import get_session
 from typing import Optional
 from ..models import Incident, Severity, Category, Status
+from datetime import datetime, timezone
 
 router = APIRouter(prefix="/incidents", tags=["incidents"])
 
 
 # ── 1. Create ─────────────────────────────────────────────────────────────────
+
 @router.post("/",status_code=201, summary="Create a new incident")
 def create_incident(
     title: str = Body(...),
@@ -48,6 +50,7 @@ def create_incident(
 
 
 # ── 2. List + filter ──────────────────────────────────────────────────────────
+
 @router.get("/", summary="List incidents")
 def list_incidents(
     severity: Optional[Severity] = Query(default=None),
@@ -86,10 +89,32 @@ def list_incidents(
 
 
 # ── 3. Detail ─────────────────────────────────────────────────────────────────
+
 @router.get("/{incident_id}/", summary="Get particular incident detail")
 def get_incident(incident_id: int, session: Session = Depends(get_session)):
     """Retrieve full incident detail. 404 if not found."""
     incident = session.get(Incident, incident_id)
     if not incident:
         raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found.")
+    return incident
+
+
+# ── 4. Status update ──────────────────────────────────────────────────────────
+
+@router.patch("/{incident_id}/status/", summary="Update incident status")
+def update_status(
+    incident_id: int,
+    status: Status = Body(..., embed=True),
+    session: Session = Depends(get_session),
+):
+    """Update incident status only. Validates the transition is allowed."""
+    incident = session.get(Incident, incident_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found.")
+
+    incident.status = status
+    incident.updated_at = datetime.now(timezone.utc)
+    session.add(incident)
+    session.commit()
+    session.refresh(incident)
     return incident
