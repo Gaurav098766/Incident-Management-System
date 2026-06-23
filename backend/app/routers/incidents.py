@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body, HTTPException, Query
+from fastapi import APIRouter, Depends, Body, HTTPException, Query, logger
 from sqlmodel import Session, select, col
 from ..database import get_session
 from typing import Optional
@@ -17,11 +17,15 @@ def create_incident(
     session: Session = Depends(get_session),
 ):
     """Create a new incident. Returns the full incident object including id/timestamps."""
-    incident = Incident(**payload.model_dump())
-    session.add(incident)
-    session.commit()
-    session.refresh(incident)
-    return IncidentDetail.model_validate(incident)
+    try:
+        incident = Incident(**payload.model_dump())
+        session.add(incident)
+        session.commit()
+        session.refresh(incident)
+        return IncidentDetail.model_validate(incident)
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=500, detail="Failed to create incident.")
 
 
 # ── 2. List + filter ──────────────────────────────────────────────────────────
@@ -87,9 +91,13 @@ def update_status(
     if not incident:
         raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found.")
 
-    incident.status = status
-    incident.updated_at = datetime.now(timezone.utc)
-    session.add(incident)
-    session.commit()
-    session.refresh(incident)
-    return IncidentDetail.model_validate(incident)
+    try:
+        incident.status = status
+        incident.updated_at = datetime.now(timezone.utc)
+        session.add(incident)
+        session.commit()
+        session.refresh(incident)
+        return IncidentDetail.model_validate(incident)
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=500, detail="Failed to update incident.")
