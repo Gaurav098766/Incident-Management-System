@@ -28,7 +28,6 @@ export default async function HomePage({
       page,
       page_size: 10,
     });
-    console.log(data)
   } catch (e) {
     error = e instanceof Error ? e.message : "Failed to load incidents";
   }
