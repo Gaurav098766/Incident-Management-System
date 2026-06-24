@@ -40,12 +40,12 @@ export default async function HomePage({
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Incidents</h1>
           {data && (
-            <p className="text-sm text-gray-500 mt-0.5">{data.total} total</p>
+            <p className="text-sm text-gray-500 mt-0.5">{data.count} total</p>
           )}
         </div>
         <Link
           href="/incidents/new"
-          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           + New Incident
         </Link>

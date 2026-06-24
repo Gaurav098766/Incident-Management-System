@@ -15,14 +15,14 @@ export default function Home() {
         <div className="flex gap-4 justify-center">
           <Link
             href="/incidents"
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
           >
             View Incidents
           </Link>
 
           <Link
             href="/incidents/new"
-            className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-black font-medium"
+            className="px-6 py-3 border border-slate-300 rounded-lg hover:bg-slate-100 text-slate-800 font-medium"
           >
             Create Incident
           </Link>
