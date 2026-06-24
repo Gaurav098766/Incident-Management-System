@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { listIncidents } from "@/lib/api";
-// import { SeverityBadge, StatusBadge } from "@/components/badges";
 import IncidentFilters from "./IncidentFilters";
 import type { Severity, Status } from "@/lib/types";
 
