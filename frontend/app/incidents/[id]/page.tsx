@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getIncident, updateStatus } from "@/lib/api";
 import type {Status } from "@/lib/types";
 import type { IncidentDetail} from "@/lib/interfaces";
+import { SeverityBadge, StatusBadge } from "@/components/badges";
 
 const STATUS_OPTIONS: Status[] = ["open", "in_progress", "resolved", "closed"];
 const STATUS_LABELS: Record<Status, string> = {
@@ -76,8 +77,8 @@ export default function IncidentDetailPage() {
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
-          {incident.severity}
-          {incident.status}
+          <SeverityBadge severity={incident.severity} />
+          <StatusBadge status={incident.status} />
           {incident.category && (
             <span className="px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-600">
               {incident.category.replace("_", " ")}

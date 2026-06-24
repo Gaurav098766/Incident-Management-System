@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listIncidents } from "@/lib/api";
 import IncidentFilters from "./IncidentFilters";
 import type { Severity, Status } from "@/lib/types";
+import { SeverityBadge, StatusBadge } from "@/components/badges";
 
 interface SearchParams {
   severity?: Severity;
@@ -104,10 +105,10 @@ export default async function HomePage({
                     </Link>
                   </td>
                   <td className="px-4 py-3">
-                    {inc.severity}
+                    <SeverityBadge severity={inc.severity} />
                   </td>
                   <td className="px-4 py-3">
-                    {inc.status}
+                    <StatusBadge status={inc.status} />
                   </td>
                   <td className="px-4 py-3 text-gray-500">
                     {inc.category?.replace("_", " ") ?? "—"}
